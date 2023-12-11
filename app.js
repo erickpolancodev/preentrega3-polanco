@@ -33,7 +33,7 @@ function construirTienda(productos){
     productos.forEach((producto, index) => { 
         contenedorTienda.innerHTML +=  
         `
-            <div class="item col-3 my-5">
+            <div class="item col-12 col-sm-6 col-md-4 col-lg-3 my-5">
                 <img src="${producto.imagen}" alt="${producto.nombre}">
                 <h3> ${producto.nombre} </h3>
                 <h4> ${producto.marca} </h4>
@@ -48,6 +48,15 @@ function construirTienda(productos){
 
 construirTienda(tienda);
 
+
+// Obtenemos los items del localstorage del carrito
+function verificarStorage() {
+    carrito = JSON.parse(localStorage.getItem('carrito'));
+    carrito.length !== 0 && construirCarrito();
+}
+
+verificarStorage();
+
 // verificamos cual ha sido el boton que ha sido clickeado y 
 const btnComprar = document.querySelectorAll('.btn-tienda');
 
@@ -61,12 +70,15 @@ btnComprar.forEach((btn)=>{
 function obtenerAtributo(){
     let idProducto = this.getAttribute('data-producto');
     carrito.push(tienda[idProducto]);
+    localStorage.setItem('carrito', JSON.stringify(carrito));
     construirCarrito();
 }
 
 function construirCarrito(){
     bodyCarrito.innerHTML = '';
+    carrito = JSON.parse(localStorage.getItem('carrito'));
     carrito.forEach((producto,index) => {
+        let precioProducto = producto.precio;
         bodyCarrito.innerHTML += 
         `
         <tr>
@@ -76,16 +88,22 @@ function construirCarrito(){
             <td> ${producto.precio} </td>
         </tr>
         `;
-
-        totalCarrito += producto.precio;
-        total.innerHTML = totalCarrito + ` USD`;
+        sumar(precioProducto);
+        
     });
+    
+}
+
+function sumar(precio){
+    totalCarrito = precio + totalCarrito
+    total.innerHTML = ` ${totalCarrito}  USD`;
 }
 
 function resetCarrito(){
     totalCarrito = 0;
     total.innerHTML = totalCarrito;
     bodyCarrito.innerHTML = '<tr><td colspan="4"><h5 class="text-center">No hay productos en el carrito</h5></td></tr>';
+    localStorage.removeItem("carrito");
     carrito = [];
 }
 
