@@ -8,7 +8,7 @@
  * */ 
 
 let tienda = [];
-let carrito = [];
+let carrito = (!localStorage.getItem('carrito')) ? localStorage.setItem('carrito', JSON.stringify([])): localStorage.getItem('carrito');
 let totalCarrito = 0;
 
 const contenedorTienda = document.querySelector('.tienda');
@@ -33,10 +33,10 @@ function construirTienda(productos){
     productos.forEach((producto, index) => { 
         contenedorTienda.innerHTML +=  
         `
-            <div class="item col-12 col-sm-6 col-md-4 col-lg-3 my-5">
-                <img src="${producto.imagen}" alt="${producto.nombre}">
-                <h3> ${producto.nombre} </h3>
-                <h4> ${producto.marca} </h4>
+            <div class="item col-12 col-sm-6 col-md-4 col-lg-3 my-4">
+                <img src="${producto.imagen}" alt="${producto.nombre}" class="img-fluid">
+                <h3 class="fw-bolder"> ${producto.nombre} </h3>
+                <h4 class="fw-light"> ${producto.marca} </h4>
                 <h5> ${producto.precio} USD</h5>
                 <button type="button" class="btn btn-primary btn-tienda" data-producto="${index}">Comprar</button>
             </div>
@@ -95,7 +95,7 @@ function construirCarrito(){
 }
 
 function sumar(precio){
-    totalCarrito = precio + totalCarrito
+    totalCarrito = totalCarrito + precio;
     total.innerHTML = ` ${totalCarrito}  USD`;
 }
 
