@@ -7,7 +7,7 @@
  * 3 - verificar item seleccionado
  * */ 
 
-let tienda = [];
+const tienda = [];
 let carrito = (!localStorage.getItem('carrito')) ? localStorage.setItem('carrito', JSON.stringify([])): localStorage.getItem('carrito');
 let totalCarrito = 0;
 
@@ -76,6 +76,7 @@ function obtenerAtributo(){
 
 function construirCarrito(){
     bodyCarrito.innerHTML = '';
+    totalCarrito = 0;
     carrito = JSON.parse(localStorage.getItem('carrito'));
     carrito.forEach((producto,index) => {
         let precioProducto = producto.precio;
