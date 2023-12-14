@@ -1,11 +1,13 @@
 /**
  * PROYECTO ERICK POLANCO
  * 
- * El proyecto simulara un carrito de compras 
+ * El proyecto simulara un carrito de compras de una tienda de tecnologia
  * 1 - Se crea la tienda 
- * 2 - Se muestra la tienda
- * 3 - Se agregan items al carrito
- * 4 - Se realiza la sumatoria de los precios
+ * 2 - Se muestran los productos de la tienda
+ * 3 - Se agregan el listener para que escuche el click de los botones de la tienda y agrege el producto al carrito
+ * 4 - Se verifica si el localStorage tiene o no productos y se agregan al carrito, si no queda vacio
+ * 5 - Se realiza la sumatoria de los precios
+ * 6 - Se realiza la compra
  * 
  * */ 
 
@@ -19,7 +21,8 @@ const total = document.querySelector('.total');
 const btnReset = document.querySelector('.reset');
 const btnComprar = document.querySelector('#btnComprar');
 
-//creacion de los items de la tienda
+
+//1 - creacion de los items de la tienda
 
 tienda.push(new Producto('Amazon Echo Dot','Amazon',65,'./img/amazon-echo-dot-5.png'));
 tienda.push(new Producto('Amazon Firestick 4K MAX','Amazon',45,'./img/amazon-firestick-max.png'));
@@ -30,7 +33,7 @@ tienda.push(new Producto('Lenovo Yoga 3','Lenovo',1400,'./img/lenovo-yoga-3.png'
 tienda.push(new Producto('Samsung S23 Ultra','Samsung',1050,'./img/samsung-s23-ultra.png'));
 
 
-// Muestra de los items en la tienda
+// 2 - Muestra de los items en la tienda
 function construirTienda(productos){
 
     productos.forEach((producto, index) => { 
@@ -51,6 +54,16 @@ function construirTienda(productos){
 
 construirTienda(tienda);
 
+// listener a los botones de la tienda
+contenedorTienda.addEventListener('click', (e) => {
+    console.log(e.target.classList.contains('btn-tienda'));
+    if(e.target.classList.contains('btn-tienda')){
+        let btnTienda = e.target;
+        let id = btnTienda.getAttribute('data-producto');
+        obtenerAtributo(id);
+    }
+})
+
 
 // Obtenemos los items del localstorage del carrito
 function verificarStorage() {
@@ -61,19 +74,10 @@ function verificarStorage() {
 verificarStorage();
 
 
-
-// verificamos cual ha sido el boton que ha sido clickeado y 
-const btnAgregar = document.querySelectorAll('.btn-tienda');
-
 //se le añade el evento click a cada boton de la tienda
 btnReset.addEventListener('click', resetCarrito);
 
-btnAgregar.forEach((btn)=>{
-    btn.addEventListener('click', obtenerAtributo);
-});
-
-function obtenerAtributo(){
-    let idProducto = this.getAttribute('data-producto');
+function obtenerAtributo(idProducto){
     carrito.push(tienda[idProducto]);
     localStorage.setItem('carrito', JSON.stringify(carrito));
     construirCarrito();
