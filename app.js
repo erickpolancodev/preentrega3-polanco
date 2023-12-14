@@ -4,7 +4,9 @@
  * El proyecto simulara un carrito de compras 
  * 1 - Se crea la tienda 
  * 2 - Se muestra la tienda
- * 3 - verificar item seleccionado
+ * 3 - Se agregan items al carrito
+ * 4 - Se realiza la sumatoria de los precios
+ * 
  * */ 
 
 const tienda = [];
@@ -15,6 +17,7 @@ const contenedorTienda = document.querySelector('.tienda');
 const bodyCarrito = document.querySelector('.carrito tbody');
 const total = document.querySelector('.total');
 const btnReset = document.querySelector('.reset');
+const btnComprar = document.querySelector('#btnComprar');
 
 //creacion de los items de la tienda
 
@@ -38,7 +41,7 @@ function construirTienda(productos){
                 <h3 class="fw-bolder"> ${producto.nombre} </h3>
                 <h4 class="fw-light"> ${producto.marca} </h4>
                 <h5> ${producto.precio} USD</h5>
-                <button type="button" class="btn btn-primary btn-tienda" data-producto="${index}">Comprar</button>
+                <button type="button" class="btn btn-primary btn-tienda" data-producto="${index}">Agregar</button>
             </div>
         `;
         total
@@ -57,13 +60,15 @@ function verificarStorage() {
 
 verificarStorage();
 
+
+
 // verificamos cual ha sido el boton que ha sido clickeado y 
-const btnComprar = document.querySelectorAll('.btn-tienda');
+const btnAgregar = document.querySelectorAll('.btn-tienda');
 
 //se le añade el evento click a cada boton de la tienda
 btnReset.addEventListener('click', resetCarrito);
 
-btnComprar.forEach((btn)=>{
+btnAgregar.forEach((btn)=>{
     btn.addEventListener('click', obtenerAtributo);
 });
 
@@ -72,6 +77,15 @@ function obtenerAtributo(){
     carrito.push(tienda[idProducto]);
     localStorage.setItem('carrito', JSON.stringify(carrito));
     construirCarrito();
+    btnComprar.disabled = (Object.keys(carrito).length === 0);
+
+    Toastify({
+        text: "Agregado al carrito",
+        duration: 3000,
+        close: true,
+        gravity: "top", 
+        position: "right", 
+    }).showToast();
 }
 
 function construirCarrito(){
@@ -89,8 +103,7 @@ function construirCarrito(){
             <td> ${producto.precio} </td>
         </tr>
         `;
-        sumar(precioProducto);
-        
+        sumar(precioProducto);        
     });
     
 }
@@ -107,6 +120,24 @@ function resetCarrito(){
     localStorage.removeItem("carrito");
     carrito = [];
 }
+
+function comprarProductos(){
+    btnComprar.disabled = 'disabled';
+    Swal.fire({
+        title: 'Gracias por su compra, vuelva pronto',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+    }).then((result) =>{
+        // saber si el usuario apreto el boton confirmar
+        if(result.isConfirmed){
+            resetCarrito();
+        }
+    })
+}
+
+
+btnComprar.addEventListener('click', comprarProductos);
+
 
 
 
