@@ -69,6 +69,7 @@ contenedorTienda.addEventListener('click', (e) => {
 function verificarStorage() {
     carrito = JSON.parse(localStorage.getItem('carrito'));
     carrito.length !== 0 && construirCarrito();
+    btnComprar.disabled = (carrito.length !== 0) ? '': 'disabled';
 }
 
 verificarStorage();
