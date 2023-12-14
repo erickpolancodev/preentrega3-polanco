@@ -119,6 +119,7 @@ function resetCarrito(){
     bodyCarrito.innerHTML = '<tr><td colspan="4"><h5 class="text-center">No hay productos en el carrito</h5></td></tr>';
     localStorage.removeItem("carrito");
     carrito = [];
+    btnComprar.disabled = 'disabled';
 }
 
 function comprarProductos(){
